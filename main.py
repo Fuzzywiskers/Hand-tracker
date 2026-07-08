@@ -49,8 +49,38 @@ def main():
                 for hand_landmarks in results.multi_hand_landmarks:
                     mp_draw.draw_landmarks(
                         img,
-                        hand_landmarks
+                        hand_landmarks,
+                        mp_hands.HAND_CONNECTIONS  #make line connectiosn between landmarks#
                     )
+
+                    finger_tips = {
+                        "Thumb": hand_landmarks.landmark[4],        #hand_landmark.landmark[#] is how landmark defines finger tips#
+                        "Index": hand_landmarks.landmark[8],
+                        "Middle": hand_landmarks.landmark[12],
+                        "Ring": hand_landmarks.landmark[16],
+                        "Pinky": hand_landmarks.landmark[20]
+                    }
+
+                    for name, landmark in finger_tips.items():
+                        x, y = int(landmark.x * w), int(landmark.y * h)
+                        cv2.putText(
+                            img, 
+                            name,
+                            (x, y -10),      #so the text is slightly above the finger#
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            0.5,
+                            (255, 255, 255),
+                            1
+                        )
+
+                        #turnt he tips of your finger a green circle#
+                        cv2.circle(
+                            img,
+                            (x, y),
+                            5, 
+                            (0, 255, 0),
+                            -1      #will fill the whole circle#
+                        )
 
             cv2.imshow("Image", img)
 
